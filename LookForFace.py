@@ -32,8 +32,8 @@ class SearchForFace:
 
         # vars for fitting face size to linear function
         self.current_distance_to_human = None  # current distance to the human
-        self.reference_face_size_at_5m = None
-        self.reference_face_size_at_1m = None
+        self.reference_face_size_at_5 = None  # reference size at 5 unit distance
+        self.reference_face_size_at_1 = None  # reference size at 1 unit distance
 
         # motor values to use to scan from 0 to max to min to 0
         self.scan = []
@@ -122,11 +122,25 @@ class SearchForFace:
 
     def get_face_distance(self, face):
         """
-        get the distance to the detected face based off of size
+        get the distance to the detected face based off of its size
+        returns the distance units it calculated, where 1 is the optimum distance
 
         - get distance (reference parameter face size, average x frames of face)
         :param face: the detected face
-        :return:
+        :return: distance to face in arbitrary units established by the calibration
         """
-        pass
+        x, y, w, h = face
+        d1 = 1  # 1 unit for short distance
+        d2 = 5  # 5 units for long distance
+        s1 = self.reference_face_size_at_1
+        s2 = self.reference_face_size_at_5
+
+        b = (d1 * s2 - d2 * s1) / (d1 - d2)
+        m = (s1 - s2) / (d1 - d2)
+
+        # get distance units, 1 is where we want to be
+        dis = (w - b)/m
+        return dis
+
+
 
