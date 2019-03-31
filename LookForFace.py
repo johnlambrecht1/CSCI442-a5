@@ -1,3 +1,11 @@
+import maestro
+
+# TODO remove
+# MOTORS = 1
+# TURN = 2
+# BODY = 0
+HEADTILT = 4
+HEADTURN = 3
 
 
 class SearchForFace:
@@ -11,6 +19,37 @@ class SearchForFace:
         self.current_distance_to_human = None  # current distance to the human
         self.reference_face_size_at_5m = None
         self.reference_face_size_at_1m = None
+
+        # motor control variables
+        self.tango = maestro.Controller()
+        self.body = 6000
+        self.headTurn = 6000
+        self.headTilt = 6000
+        self.motors = 6000
+        self.turn = 6000
+
+    def head(self, key):
+        print(key.keycode)
+        if key.keycode == 38:
+            self.headTurn += 200
+            if self.headTurn > 7900:
+                self.headTurn = 7900
+            self.tango.setTarget(HEADTURN, self.headTurn)
+        elif key.keycode == 52:
+            self.headTurn -= 200
+            if self.headTurn < 1510:
+                self.headTurn = 1510
+            self.tango.setTarget(HEADTURN, self.headTurn)
+        elif key.keycode == 25:
+            self.headTilt += 200
+            if self.headTilt > 7900:
+                self.headTilt = 7900
+            self.tango.setTarget(HEADTILT, self.headTilt)
+        elif key.keycode == 39:
+            self.headTilt -= 200
+            if self.headTilt < 1510:
+                self.headTilt = 1510
+            self.tango.setTarget(HEADTILT, self.headTilt)
 
     def search_for_face(self):
         """
