@@ -24,13 +24,11 @@ class SearchForFace:
 
         # use the given Tango Phone client
         self.client = client
-        # vars for the face finding interval
-        self.no_face_search_restart_interval = 0  # min time interval required to restart search
-        self.last_face_time = 0  # last time a face was seen
+
+        # stop scanning for a face after this timeout
         self.give_up_search_time = 120  # give up after 2 min
 
         # vars for fitting face size to linear function
-        self.current_distance_to_human = None  # current distance to the human
         self.reference_face_size_at_5 = None  # reference size at 5 unit distance
         self.reference_face_size_at_1 = None  # reference size at 1 unit distance
 
@@ -120,8 +118,6 @@ class SearchForFace:
         # check if a face is in image
         faces = self.face_cascade.detectMultiScale(gray, 1.8, 5)
         if len(faces) > 0:
-            # face found
-            self.last_face_time = time.process_time()
             # clear the stream in preparation for the next frame
             self.rawCapture.truncate(0)
             return faces[0]
