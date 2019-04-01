@@ -22,6 +22,7 @@ rawCapture = PiRGBArray(camera, size=camera.resolution)
 # allow the camera to warmup
 time.sleep(0.1)
 
+
 class SearchForFace:
 
     def __init__(self):
