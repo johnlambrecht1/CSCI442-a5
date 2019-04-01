@@ -5,27 +5,25 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 import time
 
-# TODO remove
-# MOTORS = 1
-# TURN = 2
-# BODY = 0
-HEADTILT = 4
-HEADTURN = 3
-face_cascade = cv.CascadeClassifier("haarcascade_frontalface_default.xml")
-
-camera = PiCamera()
-w, h = 320, 240
-camera.resolution = (w, h)  # (640, 480)
-camera.framerate = 32
-rawCapture = PiRGBArray(camera, size=camera.resolution)
-
-# allow the camera to warmup
-time.sleep(0.1)
-
 
 class SearchForFace:
 
-    def __init__(self):
+    def __init__(self, client):
+        self.HEADTILT = 4
+        self.HEADTURN = 3
+        self.face_cascade = cv.CascadeClassifier("haarcascade_frontalface_default.xml")
+
+        self.camera = PiCamera()
+        self.w, self.h = 320, 240
+        self.camera.resolution = (self.w, self.h)  # (640, 480)
+        self.camera.framerate = 32
+        self.rawCapture = PiRGBArray(self.camera, size=self.camera.resolution)
+
+        # allow the camera to warmup
+        time.sleep(0.1)
+
+        # use the given Tango Phone client
+        self.client = client
         # vars for the face finding interval
         self.no_face_search_restart_interval = 0  # min time interval required to restart search
         self.last_face_time = 0  # last time a face was seen
@@ -67,14 +65,22 @@ class SearchForFace:
                 self.headTurn = 7900
             elif self.headTurn < 1510:
                 self.headTurn = 1510
-            self.tango.setTarget(HEADTURN, self.headTurn)
+            self.tango.setTarget(self.HEADTURN, self.headTurn)
         else:
             self.headTilt = value
             if self.headTilt > 7900:
                 self.headTilt = 7900
             elif self.headTilt < 1510:
                 self.headTilt = 1510
-            self.tango.setTarget(HEADTILT, self.headTilt)
+            self.tango.setTarget(self.HEADTILT, self.headTilt)
+
+    def zero_motors(self):
+        """
+        sets all motors to their zero position
+        :return: None
+        """
+        for x in range(0, 5):
+            self.tango.setTarget(x, 6000)
 
     def search_for_face(self):
         """
@@ -90,36 +96,51 @@ class SearchForFace:
         while time.process_time() - start_time < self.give_up_search_time:
             for y in self.scan:
                 for x in self.scan:
+                    # move to next scanning position
                     self.move_head(True, x)
                     self.move_head(False, y)
-                    # update frame
-                    frame = camera.capture(rawCapture, format="bgr", use_video_port=True)
-                    image = frame.array
-                    gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
 
-                    # check if a face is in image
-                    faces = face_cascade.detectMultiScale(gray, 1.8, 5)
-                    if len(faces) > 0:
-                        # face found
-                        self.last_face_time = time.process_time()
-                        # clear the stream in preparation for the next frame
-                        rawCapture.truncate(0)
-                        return faces[0]
-
-                    # clear the stream in preparation for the next frame
-                    rawCapture.truncate(0)
+                    # check for a face
+                    face = self.get_face()
+                    if face is not None:
+                        return face
         # time expired, face not found
         return None
 
-    def face_found(self, face):
+    def get_face(self):
+        """
+        Try to detect a face and return it. returns None on a failure
+        :return: the face or None
+        """
+        # update frame
+        frame = self.camera.capture(self.rawCapture, format="bgr", use_video_port=True)
+        image = frame.array
+        gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
+
+        # check if a face is in image
+        faces = self.face_cascade.detectMultiScale(gray, 1.8, 5)
+        if len(faces) > 0:
+            # face found
+            self.last_face_time = time.process_time()
+            # clear the stream in preparation for the next frame
+            self.rawCapture.truncate(0)
+            return faces[0]
+        else:
+            # clear the stream in preparation for the next frame
+            self.rawCapture.truncate(0)
+            # no face found
+            return None
+
+    def face_found(self):
         """
         do face found actions
         - don't do if the face is lost for less then 15 sec
         - say “hello human”
-        :param face:
         :return:
         """
-        pass
+        for words in ["hello human", "How are you"]:
+            time.sleep(1)
+            self.client.sendData(words)
 
     def get_face_distance(self, face):
         """
