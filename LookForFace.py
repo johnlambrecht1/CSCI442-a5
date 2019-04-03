@@ -11,6 +11,8 @@ class SearchForFace:
     def __init__(self, client):
         self.HEADTILT = 4
         self.HEADTURN = 3
+        self.TURN=2
+        self.MOTORS=1
         self.face_cascade = cv.CascadeClassifier("haarcascade_frontalface_default.xml")
 
         self.camera = PiCamera()
@@ -58,14 +60,14 @@ class SearchForFace:
         :return:
         """
         if turn:
-            self.headTurn = value
+            self.headTurn += value
             if self.headTurn > 7900:
                 self.headTurn = 7900
             elif self.headTurn < 1510:
                 self.headTurn = 1510
             self.tango.setTarget(self.HEADTURN, self.headTurn)
         else:
-            self.headTilt = value
+            self.headTilt += value
             if self.headTilt > 7900:
                 self.headTilt = 7900
             elif self.headTilt < 1510:
@@ -79,6 +81,32 @@ class SearchForFace:
         """
         for x in range(0, 5):
             self.tango.setTarget(x, 6000)
+
+    def turn_bot(self, value):
+        """
+        Turn robot to position
+        :param value: amount robot is turned
+        :return:
+        """
+        self.turn += value
+        if self.turn > 7400:
+            self.turn=7400
+        if self.turn<2110:
+            self.turn=2110
+        self.tango.setTarget(self.TURN, self.turn)
+
+    def move_bot(self, value):
+        """
+        Move robot forward or back
+        :param value: Amount robot will be moved
+        :return:
+        """
+        self.motors+=value
+        if (self.motors>7900):
+            self.motors=7900
+        if (self.motors<1510):
+            self.motors=1510
+        self.tango.setTarget(self.MOTORS, self.motors)
 
     def search_for_face(self):
         """
@@ -164,3 +192,80 @@ class SearchForFace:
 
 
 
+    def center_on_face(self, face):
+        """
+        move neck and wheels so that the robot is looking directly at the face
+        :param face: the detected face
+        :return:
+        """
+
+        width, height = self.image.shape[:2]
+        center_screen_area= self.image[height/2-100:height/2+100, width/2-100:width/2+100]
+        for (x,y,w,h) in face:
+            roi_face = self.image[y:y+h, x:x+w]
+            face_centery, face_centerx = self.image(y+h/2, x+w/2)
+        while face_centery<(height/2-100):
+            self.move_head(False, 150)
+        while face_centery>(height/2+100):
+            self.move_head(False,150)
+        while face_centerx<(width/2-100):
+            self.move_head(True, 150)
+        while face_centerx>(width/2+100):
+            self.move_head(True, 150)
+        while (self.headTurn >6100) or (self.headTurn<5900):
+            if (self.headTurn > 6100):
+                self.turn_bot(-300)
+                time.sleep(1.5)
+                self.turn_bot(300)
+            if (self.headTurn<5900):
+                self.turn_bot(300)
+                time.sleep(1.5)
+                self.turn_bot(-300)
+
+        
+
+
+
+        pass
+
+    def move_forward_or_back(self, face):
+        """
+        Checks the size of the face, and moves either forward or back to get the face to the correct size
+        :param face: the detected face
+        :return:
+        """
+
+        while not ((self.get_face_distance(face) < 1.1) or (self.get_face_distance(face) > .9)):
+            # checks if face is too small, then moves back
+            if self.get_face_distance(face) < .9:
+                self.move_bot(300)
+            # checks if face is too big, then moves forward
+            elif self.get_face_distance(face) > 1.1:
+                self.move_bot(-300)
+        self.motors = 6000
+        self.tango.setTarget(self.MOTORS, self.motors)
+        pass
+
+    def track_face(self, face):
+        """
+        moves the neck so that the face is centered on the screen
+        If no face is on screen for 15 sec, goes back to search for face
+        :param face: the detected face
+        :return:
+        """
+        width, height = self.image.shape[:2]
+        center_screen_area = self.image[height / 2 - 100:height / 2 + 100, width / 2 - 100:width / 2 + 100]
+        for (x, y, w, h) in face:
+            roi_face = self.image[y:y + h, x:x + w]
+            face_centery, face_centerx = self.image(y + h / 2, x + w / 2)
+        while face_centery < (height / 2 - 100):
+            self.move_head(False, 150)
+        while face_centery > (height / 2 + 100):
+            self.move_head(False, 150)
+        while face_centerx < (width / 2 - 100):
+            self.move_head(True, 150)
+        while face_centerx > (width / 2 + 100):
+            self.move_head(True, 150)
+
+
+        pass
