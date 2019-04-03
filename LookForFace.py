@@ -127,16 +127,18 @@ class SearchForFace:
             # no face found
             return None
 
-    def face_found(self):
+    def face_found(self, face):
         """
         do face found actions
         - don't do if the face is lost for less then 15 sec
         - say “hello human”
-        :return:
+        :param face: the face that was found
+        :return: distance to the face
         """
         for words in ["hello human", "How are you"]:
             time.sleep(1)
             self.client.sendData(words)
+        return self.get_face_distance(face)
 
     def get_face_distance(self, face):
         """
