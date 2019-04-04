@@ -107,4 +107,5 @@ camera.framerate=32
 rawCapture = PiRGBArray(camera, size=camera.resolution)
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
     image = frame.array
+    print"test1"
     running_loop(image)
