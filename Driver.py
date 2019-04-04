@@ -74,6 +74,7 @@ def running_loop(image):
     tracking_state = False
     while True:
         if search_state:
+            print("test")
             # search for a face, once found go on to rotate state unless still in tracking state
             face_found, dis = searching(image)
             if face_found:
