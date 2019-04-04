@@ -72,33 +72,33 @@ def running_loop(image):
     rotate_state = False
     moving_state = False
     tracking_state = False
-        while True:
-            if search_state:
-                # search for a face, once found go on to rotate state unless still in tracking state
-                face_found, dis = searching(image)
-                if face_found:
-                    search_state = False
-                    rotate_state = not tracking_state
+    while True:
+        if search_state:
+            # search for a face, once found go on to rotate state unless still in tracking state
+            face_found, dis = searching(image)
+            if face_found:
+                search_state = False
+                rotate_state = not tracking_state
 
-            elif rotate_state:
-                face_found = rotate_to_face(image)
-                rotate_state = False
-                if not face_found:
+        elif rotate_state:
+            face_found = rotate_to_face(image)
+            rotate_state = False
+            if not face_found:
+                search_state = True
+
+        elif moving_state:
+            face_found = move_to_face(image)
+            moving_state = False
+            if not face_found:
+                search_state = True
+
+        elif tracking_state:
+            # only exit tracking state to do some searching then go right back to tracking
+            face_found = tracking_face(image)
+            timeout = time.process_time() - last_face_time < no_face_search_restart_interval
+            if not face_found:
+                if not timeout:
                     search_state = True
-
-            elif moving_state:
-                face_found = move_to_face(image)
-                moving_state = False
-                if not face_found:
-                    search_state = True
-
-            elif tracking_state:
-                # only exit tracking state to do some searching then go right back to tracking
-                face_found = tracking_face(image)
-                timeout = time.process_time() - last_face_time < no_face_search_restart_interval
-                if not face_found:
-                    if not timeout:
-                        search_state = True
 camera = PiCamera()
 w, h = 320, 240
 camera.resolution = (w,h)
