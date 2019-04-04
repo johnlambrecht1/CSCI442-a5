@@ -74,7 +74,10 @@ def running_loop():
     tracking_state = False
     dis = 0
     camera = PiCamera()
-    rawCapture = PiRGBArray(camera, size = camera.resolution)
+    w, h = 320, 240
+    camera.resolution = (w,h)
+    camera.framerate=32
+    rawCapture = PiRGBArray(camera, size=camera.resolution)
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
         image = frame.array
         while True:
