@@ -17,7 +17,7 @@ no_face_search_restart_interval = 0  # min time interval required to restart fac
 last_face_time = -no_face_search_restart_interval  # last time a face was seen
 
 
-def move_to_face(distance):
+def move_to_face():
     """
     moving to offset away from face state
     :param distance: the distance to the face
@@ -95,7 +95,7 @@ def running_loop():
                     search_state = True
 
             elif moving_state:
-                face_found = move_to_face(dis)
+                face_found = move_to_face()
                 moving_state = False
                 if not face_found:
                     search_state = True
@@ -107,7 +107,7 @@ def running_loop():
                 if not face_found:
                     if not timeout:
                         search_state = True
-
+            rawCapture.truncate(0)
 
 
 running_loop()
