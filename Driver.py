@@ -34,7 +34,7 @@ def searching(image):
     global last_face_time
     # zero motors
     face_search.zero_motors()
-    print ("test3")
+    #print ("test3")
     # start searching for a face
     face = face_search.search_for_face(image)
     rawCapture.truncate(0)
