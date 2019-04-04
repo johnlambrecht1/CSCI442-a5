@@ -108,7 +108,7 @@ class SearchForFace:
             self.motors=1510
         self.tango.setTarget(self.MOTORS, self.motors)
 
-    def search_for_face(self):
+    def search_for_face(self, image):
         """
         search for a face, if face is found, return success, otherwise loop
         :return: the face found which is its (x, y, w, h) or None
@@ -127,20 +127,19 @@ class SearchForFace:
                     self.move_head(False, y)
 
                     # check for a face
-                    face = self.get_face()
+                    face = self.get_face(image)
                     if face is not None:
                         return face
         # time expired, face not found
         return None
 
-    def get_face(self):
+    def get_face(self, image):
         """
         Try to detect a face and return it. returns None on a failure
         :return: the face or None
         """
         # update frame
-        frame = self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True)
-        image = frame.array
+
         gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
 
         # check if a face is in image

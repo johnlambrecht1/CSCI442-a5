@@ -1,5 +1,8 @@
 from client import ClientSocket
 from LookForFace import SearchForFace
+from picamera.array import piRGBArray
+from picamera import PiCamera
+import numpy as np
 import time
 
 IP = '10.200.56.146'
@@ -26,7 +29,7 @@ def move_to_face(distance):
     return False
 
 
-def searching():
+def searching(image):
     global last_face_time
     # zero motors
     face_search.zero_motors()
@@ -70,34 +73,37 @@ def running_loop():
     moving_state = False
     tracking_state = False
     dis = 0
+    camera = piCamera()
+    rawCapture = piRGBArray(camera, size = camera.resolution)
+    for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True)
+        image = frame.array
+        while True:
+            if search_state:
+                # search for a face, once found go on to rotate state unless still in tracking state
+                face_found, dis = searching(image)
+                if face_found:
+                    search_state = False
+                    rotate_state = not tracking_state
 
-    while True:
-        if search_state:
-            # search for a face, once found go on to rotate state unless still in tracking state
-            face_found, dis = searching()
-            if face_found:
-                search_state = False
-                rotate_state = not tracking_state
-
-        elif rotate_state:
-            face_found = rotate_to_face()
-            rotate_state = False
-            if not face_found:
-                search_state = True
-
-        elif moving_state:
-            face_found = move_to_face(dis)
-            moving_state = False
-            if not face_found:
-                search_state = True
-
-        elif tracking_state:
-            # only exit tracking state to do some searching then go right back to tracking
-            face_found = tracking_face()
-            timeout = time.process_time() - last_face_time < no_face_search_restart_interval
-            if not face_found:
-                if not timeout:
+            elif rotate_state:
+                face_found = rotate_to_face()
+                rotate_state = False
+                if not face_found:
                     search_state = True
+
+            elif moving_state:
+                face_found = move_to_face(dis)
+                moving_state = False
+                if not face_found:
+                    search_state = True
+
+            elif tracking_state:
+                # only exit tracking state to do some searching then go right back to tracking
+                face_found = tracking_face()
+                timeout = time.process_time() - last_face_time < no_face_search_restart_interval
+                if not face_found:
+                    if not timeout:
+                        search_state = True
 
 
 
