@@ -133,7 +133,7 @@ class SearchForFace:
         # time expired, face not found
         return None
 
-    def get_face(self, image):
+    def get_face(self, image, rawCapture):
         """
         Try to detect a face and return it. returns None on a failure
         :return: the face or None
@@ -146,11 +146,11 @@ class SearchForFace:
         faces = self.face_cascade.detectMultiScale(gray, 1.8, 5)
         if len(faces) > 0:
             # clear the stream in preparation for the next frame
-            self.rawCapture.truncate(0)
+            #self.rawCapture.truncate(0)
             return faces[0]
         else:
             # clear the stream in preparation for the next frame
-            self.rawCapture.truncate(0)
+            #self.rawCapture.truncate(0)
             # no face found
             return None
 

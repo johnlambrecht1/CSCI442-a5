@@ -23,7 +23,8 @@ def move_to_face(image):
     :param distance: the distance to the face
     :return: False if face is lost
     """
-    face = face_search.search_for_face(image)
+    face = face_search.get_face(image)
+
     face_search.move_forward_or_back(face)
 
     return False
@@ -35,6 +36,7 @@ def searching(image):
     face_search.zero_motors()
     # start searching for a face
     face = face_search.search_for_face(image)
+    rawCapture.truncate(0)
     # check that a face was found
     if face is not None:
         # face found
@@ -67,7 +69,7 @@ def rotate_to_face(image):
     return False
 
 
-def running_loop(image):
+def running_loop(image, rawCapture):
     search_state = True
     rotate_state = False
     moving_state = False
@@ -77,18 +79,21 @@ def running_loop(image):
             print("test")
             # search for a face, once found go on to rotate state unless still in tracking state
             face_found, dis = searching(image)
+            rawCapture.truncate(0)
             if face_found:
                 search_state = False
                 rotate_state = not tracking_state
 
         elif rotate_state:
             face_found = rotate_to_face(image)
+            rawCapture.truncate(0)
             rotate_state = False
             if not face_found:
                 search_state = True
 
         elif moving_state:
             face_found = move_to_face(image)
+            rawCapture.truncate(0)
             moving_state = False
             if not face_found:
                 search_state = True
@@ -96,6 +101,7 @@ def running_loop(image):
         elif tracking_state:
             # only exit tracking state to do some searching then go right back to tracking
             face_found = tracking_face(image)
+            rawCapture.truncate(0)
             timeout = time.process_time() - last_face_time < no_face_search_restart_interval
             if not face_found:
                 if not timeout:
@@ -109,4 +115,4 @@ print("test2")
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
     image = frame.array
     print("test1")
-    running_loop(image)
+    running_loop(image, rawCapture)
