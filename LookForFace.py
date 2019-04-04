@@ -113,9 +113,9 @@ class SearchForFace:
         search for a face, if face is found, return success, otherwise loop
         :return: the face found which is its (x, y, w, h) or None
         """
-        if time.process_time() - self.last_face_time < self.no_face_search_restart_interval:
+        #if time.process_time() - self.last_face_time < self.no_face_search_restart_interval:
             # don't do search again
-            return None
+        #    return None
 
         start_time = time.process_time()
         # scan for face while not expired
