@@ -1,6 +1,6 @@
 from client import ClientSocket
 from LookForFace import SearchForFace
-from picamera.array import piRGBArray
+from picamera.array import PiRGBArray
 from picamera import PiCamera
 import numpy as np
 import time
@@ -73,8 +73,8 @@ def running_loop():
     moving_state = False
     tracking_state = False
     dis = 0
-    camera = piCamera()
-    rawCapture = piRGBArray(camera, size = camera.resolution)
+    camera = PiCamera()
+    rawCapture = PiRGBArray(camera, size = camera.resolution)
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
         image = frame.array
         while True:
