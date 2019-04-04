@@ -75,7 +75,7 @@ def running_loop():
     dis = 0
     camera = piCamera()
     rawCapture = piRGBArray(camera, size = camera.resolution)
-    for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True)
+    for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
         image = frame.array
         while True:
             if search_state:
