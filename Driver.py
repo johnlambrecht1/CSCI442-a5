@@ -2,7 +2,7 @@ from client import ClientSocket
 from LookForFace import SearchForFace
 import time
 
-IP = '10.200.28.12'
+IP = '10.200.41.30'
 PORT = 5010
 # set up client and face searching
 client = ClientSocket(IP, PORT)
