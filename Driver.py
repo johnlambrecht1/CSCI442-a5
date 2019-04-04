@@ -8,8 +8,8 @@ import time
 IP = '10.200.56.146'
 PORT = 5010
 # set up client and face searching
-#client = ClientSocket(IP, PORT)
-#face_search = SearchForFace(client)
+client = ClientSocket(IP, PORT)
+face_search = SearchForFace(client)
 distance_tolerance = 0.1  # don't move to the face if within this distance of 1 unit
 
 # global variables
@@ -31,7 +31,7 @@ def move_to_face(image):
 
 
 def searching(image):
-    global last_face_time
+    global last_face_time, face_search, client, no_face_search_restart_interval
     # zero motors
     face_search.zero_motors()
     #print ("test3")
@@ -107,7 +107,10 @@ def running_loop(image, rawCapture):
             if not face_found:
                 if not timeout:
                     search_state = True
-camera = PiCamera()
+
+
+camera = PiCamera()  # why doesn't it like this line?
+
 w, h = 320, 240
 camera.resolution = (w,h)
 camera.framerate=32
