@@ -34,7 +34,7 @@ def searching(image):
     # zero motors
     face_search.zero_motors()
     # start searching for a face
-    face = face_search.search_for_face()
+    face = face_search.search_for_face(image)
     # check that a face was found
     if face is not None:
         # face found
