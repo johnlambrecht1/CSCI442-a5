@@ -139,7 +139,7 @@ class SearchForFace:
         :return: the face or None
         """
         # update frame
-        frame = self.camera.capture(self.rawCapture, format="bgr", use_video_port=True)
+        frame = self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True)
         image = frame.array
         gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
 
