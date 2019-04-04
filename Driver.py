@@ -20,15 +20,9 @@ def move_to_face(distance):
     :param distance: the distance to the face
     :return: False if face is lost
     """
-    if distance < 1 - distance_tolerance:
-        # go backwards
-        pass
-    elif distance > 1 + distance_tolerance:
-        # go forwards
-        pass
-    else:
-        # don't move
-        pass
+    face = face_search.search_for_face()
+    face_search.move_forward_or_back(face)
+
     return False
 
 
@@ -55,6 +49,8 @@ def tracking_face():
     tracking face state
     :return: False if face is lost
     """
+    face = face_search.search_for_face()
+    face_search.track_face(face)
     return False
 
 
@@ -63,6 +59,8 @@ def rotate_to_face():
     rotating to center on face state
     :return: False if face is lost
     """
+    face = face_search.search_for_face()
+    face_search.center_on_face(face)
     return False
 
 
