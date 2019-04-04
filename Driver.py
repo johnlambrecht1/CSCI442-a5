@@ -80,6 +80,7 @@ def running_loop():
     rawCapture = PiRGBArray(camera, size=camera.resolution)
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
         image = frame.array
+        rawCapture.truncate(0)
         while True:
             if search_state:
                 # search for a face, once found go on to rotate state unless still in tracking state
@@ -107,7 +108,7 @@ def running_loop():
                 if not face_found:
                     if not timeout:
                         search_state = True
-            rawCapture.truncate(0)
+
 
 
 running_loop()
