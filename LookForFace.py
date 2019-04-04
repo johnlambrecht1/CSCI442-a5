@@ -15,11 +15,11 @@ class SearchForFace:
         self.MOTORS=1
         self.face_cascade = cv.CascadeClassifier("haarcascade_frontalface_default.xml")
 
-        self.camera = PiCamera()
-        self.w, self.h = 320, 240
-        self.camera.resolution = (self.w, self.h)  # (640, 480)
-        self.camera.framerate = 32
-        self.rawCapture = PiRGBArray(self.camera, size=self.camera.resolution)
+#        self.camera = PiCamera()
+#        self.w, self.h = 320, 240
+#        self.camera.resolution = (self.w, self.h)  # (640, 480)
+#        self.camera.framerate = 32
+#        self.rawCapture = PiRGBArray(self.camera, size=self.camera.resolution)
 
         # allow the camera to warmup
         time.sleep(0.1)
