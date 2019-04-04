@@ -133,7 +133,7 @@ class SearchForFace:
         # time expired, face not found
         return None
 
-    def get_face(self, image, rawCapture):
+    def get_face(self, image):
         """
         Try to detect a face and return it. returns None on a failure
         :return: the face or None
