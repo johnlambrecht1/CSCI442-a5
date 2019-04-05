@@ -28,8 +28,6 @@ def move_to_face(face):
 
 def searching(image):
     global last_face_time
-    # zero motors
-    face_search.zero_motors()
     # start searching for a face
     face = face_search.search_for_face_manager(image)
     # check that a face was found
@@ -40,7 +38,6 @@ def searching(image):
         # TODO face_search.face_found()
         return True, face
     else:
-        print("No face found before timeout")
         return False, None
 
 
