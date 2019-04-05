@@ -65,10 +65,10 @@ def search_for_face(image, face):
     w, h = image.shape[:2]
     tango.setTarget(HEADTILT, 3000)
     for y in range(h):
-        move_head(False, 200)
+        move_head(False, -200)
         tango.setTarget(HEADTURN, 7900)
         for x in range(w):
-            move_head(True, -200)
+            move_head(True, 200)
             if face is not None:
                 pass
         if face is not None:
@@ -92,7 +92,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 
     cv.imshow("image", image)
 
-    #search_for_face(image, face)
+    search_for_face(image, face)
 #    tango.setTarget(HEADTURN, 7900)
     key = cv.waitKey(1) & 0xFF
     # clear the stream in preparation for the next frame
