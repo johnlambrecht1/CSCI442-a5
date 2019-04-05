@@ -7,6 +7,7 @@ import time
 
 IP = '10.200.22.237'
 PORT = 5010
+face = None
 # set up client and face searching
 client = None##ClientSocket(IP, PORT)
 face_search = SearchForFace(client)
@@ -60,6 +61,7 @@ def rotate_to_face(face, image):
 
 
 def running_loop():
+    global face
     search_state = True
     rotate_state = False
     moving_state = False
@@ -92,7 +94,7 @@ def running_loop():
                 search_state = True
 
         elif moving_state:
-            print("moveing state")
+            print("moving state")
             face_found = move_to_face(face)
             moving_state = False
             if not face_found:
