@@ -65,11 +65,11 @@ def search_for_face(image, face):
     w, h = image.shape[:2]
     tango.setTarget(HEADTILT, 3000)
     for y in range(h):
-        move_head(False, -10)
+        move_head(False, -200)
         tango.setTarget(HEADTURN, 7900)
         time.sleep(1)
         for x in range(w):
-            move_head(True, 200)
+            move_head(True, -200)
             if face is not None:
                 pass
 
