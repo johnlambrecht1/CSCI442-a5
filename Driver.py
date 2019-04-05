@@ -1,6 +1,7 @@
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 import cv2 as cv
+import time
 
 
 
@@ -12,6 +13,7 @@ camera.resolution = (w,h)
 camera.framerate=32
 rawCapture = PiRGBArray(camera, size=camera.resolution)
 print("test2")
+time.sleep(.1)
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
     image = frame.array
     print("test1")
