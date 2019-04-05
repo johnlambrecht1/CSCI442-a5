@@ -202,36 +202,38 @@ class SearchForFace:
         dis = (w - b)/m
         return dis
 
-
-    def center_on_face(self, face):
+    def center_on_face(self, face, image):
         """
         move neck and wheels so that the robot is looking directly at the face
         :param face: the detected face
         :return:
         """
 
-        width, height = self.image.shape[:2]
-        center_screen_area= self.image[height/2-100:height/2+100, width/2-100:width/2+100]
-        for (x,y,w,h) in face:
-            roi_face = self.image[y:y+h, x:x+w]
-            face_centery, face_centerx = self.image(y+h/2, x+w/2)
-        while face_centery < (height/2-100):
-            self.move_head(False, 150)
-        while face_centery > (height/2+100):
-            self.move_head(False, 150)
-        while face_centerx < (width/2-100):
-            self.move_head(True, 150)
-        while face_centerx > (width/2+100):
-            self.move_head(True, 150)
-        while (self.headTurn > 6100) or (self.headTurn<5900):
+        width, height = image.shape[:2]
+        center_screen_area= image[height/2-100:height/2+100, width/2-100:width/2+100]
+        x,y,w,h = face
+        roi_face = image[y:y+h, x:x+w]
+        face_centery, face_centerx = image(y+h/2, x+w/2)
+        not_moved = True
+
+        if face_centerx < (width/2-100):
+            self.move_head(True, 200)
+            not_moved = False
+        if face_centerx > (width/2+100):
+            self.move_head(True, 200)
+            not_moved = False
+        if (self.headTurn > 6100) or (self.headTurn<5900):
             if (self.headTurn > 6100):
                 self.turn_bot(-300)
                 time.sleep(1.5)
                 self.turn_bot(300)
+                not_moved = False
             if (self.headTurn<5900):
                 self.turn_bot(300)
                 time.sleep(1.5)
                 self.turn_bot(-300)
+                not_moved = False
+        return not_moved
 
     def move_forward_or_back(self, face):
         """
@@ -250,23 +252,24 @@ class SearchForFace:
         self.motors = 6000
         self.tango.setTarget(self.MOTORS, self.motors)
 
-    def track_face(self, face):
+    def track_face(self, face, image):
         """
         moves the neck so that the face is centered on the screen
         If no face is on screen for 15 sec, goes back to search for face
         :param face: the detected face
         :return:
         """
-        width, height = self.image.shape[:2]
-        center_screen_area = self.image[height / 2 - 100:height / 2 + 100, width / 2 - 100:width / 2 + 100]
-        for (x, y, w, h) in face:
-            roi_face = self.image[y:y + h, x:x + w]
-            face_centery, face_centerx = self.image(y + h / 2, x + w / 2)
-        while face_centery < (height / 2 - 100):
+        width, height = image.shape[:2]
+        center_screen_area = image[height / 2 - 100:height / 2 + 100, width / 2 - 100:width / 2 + 100]
+        x, y, w, h = face
+        roi_face = image[y:y + h, x:x + w]
+        face_centery, face_centerx = image(y + h / 2, x + w / 2)
+
+        if face_centery < (height / 2 - 100):
             self.move_head(False, 200)
-        while face_centery > (height / 2 + 100):
+        if face_centery > (height / 2 + 100):
             self.move_head(False, 200)
-        while face_centerx < (width / 2 - 100):
+        if face_centerx < (width / 2 - 100):
             self.move_head(True, 200)
-        while face_centerx > (width / 2 + 100):
+        if face_centerx > (width / 2 + 100):
             self.move_head(True, 200)
