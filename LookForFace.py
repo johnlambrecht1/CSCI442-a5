@@ -222,7 +222,7 @@ class SearchForFace:
         not_moved = True
 
         if face_centerx < (width/2-100):
-            self.move_head(True, 200)
+            self.move_head(True, -200)
             not_moved = False
         if face_centerx > (width/2+100):
             self.move_head(True, 200)
