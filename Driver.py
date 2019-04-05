@@ -48,8 +48,7 @@ def tracking_face(face, image):
     tracking face state
     :return: False if face is lost
     """
-    face_search.track_face(face, image)
-    return False
+    return face_search.track_face(face, image)
 
 
 def rotate_to_face(face, image):
@@ -88,19 +87,18 @@ def running_loop():
 
         elif rotate_state:
             print("rotating state")
-            face_found = rotate_to_face(face, image)
+            done = rotate_to_face(face, image)
             timeout = time.process_time() - last_face_time < no_face_search_restart_interval
-            if not face_found:
+            if not done:
                 if not timeout:
                     search_state = True
                     rotate_state = False
 
-
         elif moving_state:
             print("moving state")
-            face_found = move_to_face(face)
+            done = move_to_face(face)
             timeout = time.process_time() - last_face_time < no_face_search_restart_interval
-            if not face_found:
+            if not done:
                 if not timeout:
                     search_state = True
                     moving_state = False

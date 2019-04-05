@@ -267,12 +267,18 @@ class SearchForFace:
         width, height = image.shape[:2]
         x, y, w, h = face
         face_centery, face_centerx = y + h // 2, x + w // 2
+        head_moved = False
 
         if face_centery < (height / 2 - 100):
             self.move_head(False, 200)
+            head_moved = True
         if face_centery > (height / 2 + 100):
             self.move_head(False, 200)
+            head_moved = True
         if face_centerx < (width / 2 - 100):
             self.move_head(True, 200)
+            head_moved = True
         if face_centerx > (width / 2 + 100):
             self.move_head(True, 200)
+            head_moved = True
+        return not head_moved
