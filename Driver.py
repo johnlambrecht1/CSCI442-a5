@@ -63,9 +63,9 @@ def move_head(turn, value):
 
 def search_for_face(image, face):
     w, h = image.shape[:2]
-    for x in w:
+    for x in range(w):
         move_head(True, x)
-        for y in h:
+        for y in range(h):
             move_head(False, y)
             if face is not None:
                 pass
