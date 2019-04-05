@@ -72,7 +72,7 @@ def search_for_face(image, face):
             move_head(True, -200)
             if face is not None:
                 pass
-
+            time.sleep(.5)
         if face is not None:
             pass
 
