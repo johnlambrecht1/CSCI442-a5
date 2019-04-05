@@ -16,6 +16,8 @@ headTilt = 6000
 motors = 6000
 turn = 6000
 
+IP = '10.200.2.215'
+PORT = 5010
 
 def zero_motors():
     for x in range(0, 5):
@@ -36,7 +38,7 @@ face_cascade = cv.CascadeClassifier("haarcascade_frontalface_default.xml")
 
 # capture frames from the camera
 
-def move_head(self, turn, value):
+def move_head(turn, value):
     global headTurn, headTilt, HEADTURN, HEADTILT
     """
     Move head to position
@@ -59,6 +61,17 @@ def move_head(self, turn, value):
             headTilt = 1510
         tango.setTarget(HEADTILT, headTilt)
 
+def search_for_face(image, face):
+    w, h = image.shape()
+    for x in w:
+        move_head(True, x)
+        for y in h:
+            move_head(False, y)
+            if face is not None:
+                pass
+        if face is not None:
+            pass
+
 
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
     # grab the raw NumPy array representing the image, then initialize the timestamp
@@ -76,6 +89,8 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
         cv.rectangle(image, (x, y), (x + w, y + h), (0, 0, 255), 3)
 
     cv.imshow("image", image)
+
+    search_for_face(image, face)
 
     key = cv.waitKey(1) & 0xFF
     # clear the stream in preparation for the next frame
