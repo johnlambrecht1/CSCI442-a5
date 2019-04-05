@@ -27,7 +27,7 @@ def move_to_face(distance):
 
 
 def searching():
-    global last_face_time
+    global last_face_time, client, face_search, no_face_search_restart_interval
     # zero motors
     face_search.zero_motors()
     # start searching for a face
@@ -70,7 +70,6 @@ def running_loop():
     moving_state = False
     tracking_state = False
     dis = 0
-
     while True:
         if search_state:
             # search for a face, once found go on to rotate state unless still in tracking state
