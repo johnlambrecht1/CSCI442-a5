@@ -73,6 +73,8 @@ def running_loop():
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
         image = frame.array
         rawCapture.truncate(0)
+        # TODO remove sleep
+        time.sleep(0.1)
 
         if search_state:
             print("searching state")
