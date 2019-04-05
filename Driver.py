@@ -22,13 +22,13 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     # use the lower center of the image
     #x, y = w//5, h//2
     #image = image[y:y + h//4, x:x + 3*w//5]
-    cv.imshow("image", image)
 
     face = face_cascade.detectMultiScale(image, 1.8, 5)
 
     for (x,y,w,h) in face:
         cv.rectangle(image, (y,x), (y+h, x+w), (0,0,255), 3)
 
+    cv.imshow("image", image)
     key = cv.waitKey(1) & 0xFF
     # clear the stream in preparation for the next frame
     rawCapture.truncate(0)
