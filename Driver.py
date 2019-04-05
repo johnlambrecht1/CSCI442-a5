@@ -92,7 +92,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 
     cv.imshow("image", image)
 
-    search_for_face(image, face)
+    #search_for_face(image, face)
 #    tango.setTarget(HEADTURN, 7900)
     key = cv.waitKey(1) & 0xFF
     # clear the stream in preparation for the next frame
