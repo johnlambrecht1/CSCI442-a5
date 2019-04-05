@@ -52,7 +52,7 @@ def move_head(turn, value):
             headTurn = 7900
         elif headTurn < 1510:
             headTurn = 1510
-        tango.setTarget(self.HEADTURN, self.headTurn)
+        tango.setTarget(HEADTURN, headTurn)
     else:
         headTilt += value
         if headTilt > 7900:
