@@ -151,12 +151,8 @@ class SearchForFace:
         # check if a face is in image
         faces = self.face_cascade.detectMultiScale(gray, 1.8, 5)
         if len(faces) > 0:
-            # clear the stream in preparation for the next frame
-            self.rawCapture.truncate(0)
             return faces[0]
         else:
-            # clear the stream in preparation for the next frame
-            self.rawCapture.truncate(0)
             # no face found
             return None
 
