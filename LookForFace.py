@@ -139,8 +139,8 @@ class SearchForFace:
         """
 
         # move to next scanning position
-        self.move_head(True, x)
-        self.move_head(False, y)
+        self.move_head(True, self.scan[x])
+        self.move_head(False, self.scan[y])
 
         # check for a face
         face = self.get_face(image)
