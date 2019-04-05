@@ -29,11 +29,12 @@ class SearchForFace:
 
         # motor values to use to scan from 0 to max to min to 0
         self.scan = []
-        for x in range(6000, 8000, 200):
+        step_size = 300
+        for x in range(6000, 8000, step_size):
             self.scan.append(x)
-        for x in range(8000, 1500, -200):
+        for x in range(8000, 1500, -step_size):
             self.scan.append(x)
-        for x in range(1800, 6001, 200):
+        for x in range(1800, 6001, step_size):
             self.scan.append(x)
         self.scan = np.array(self.scan)
         self.scan_index = 0
@@ -151,8 +152,10 @@ class SearchForFace:
         # check if a face is in image
         faces = self.face_cascade.detectMultiScale(gray, 1.8, 5)
         if len(faces) > 0:
+            print("face")
             return faces[0]
         else:
+            print("no-face")
             # no face found
             return None
 
