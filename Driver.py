@@ -90,15 +90,19 @@ def running_loop():
             print("rotating state")
             face_found = rotate_to_face(face, image)
             rotate_state = False
+            timeout = time.process_time() - last_face_time < no_face_search_restart_interval
             if not face_found:
-                search_state = True
+                if not timeout:
+                    search_state = True
 
         elif moving_state:
             print("moving state")
             face_found = move_to_face(face)
             moving_state = False
+            timeout = time.process_time() - last_face_time < no_face_search_restart_interval
             if not face_found:
-                search_state = True
+                if not timeout:
+                    search_state = True
 
         elif tracking_state:
             print("tracking state")
