@@ -62,7 +62,7 @@ def move_head(turn, value):
         tango.setTarget(HEADTILT, headTilt)
 
 def search_for_face(image, face):
-    w, h, _ = image.shape()
+    w, h = image.shape[:2]
     for x in w:
         move_head(True, x)
         for y in h:
