@@ -47,14 +47,14 @@ def move_head(turn, value):
     :return:
     """
     if turn:
-        headTurn += value
+        headTurn = value
         if headTurn > 7900:
             headTurn = 7900
         elif headTurn < 1510:
             headTurn = 1510
         tango.setTarget(HEADTURN, headTurn)
     else:
-        headTilt += value
+        headTilt = value
         if headTilt > 7900:
             headTilt = 7900
         elif headTilt < 1510:
@@ -64,12 +64,12 @@ def move_head(turn, value):
 def search_for_face(image, face):
     w, h = image.shape[:2]
     tango.setTarget(HEADTILT, 3000)
-    for y in range(3000, 7900):
-        move_head(False, -200)
+    for y in range(1510, 7900):
+        move_head(False, y)
         tango.setTarget(HEADTURN, 7900)
         time.sleep(1)
         for x in range(1510, 7900):
-            move_head(True, -200)
+            move_head(True, x)
             if face is not None:
                 pass
             time.sleep(.5)
