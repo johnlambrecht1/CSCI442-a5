@@ -198,10 +198,9 @@ class SearchForFace:
         """
 
         width, height = image.shape[:2]
-        center_screen_area= image[height/2-100:height/2+100, width/2-100:width/2+100]
         x,y,w,h = face
         roi_face = image[y:y+h, x:x+w]
-        face_centery, face_centerx = image(y+h/2, x+w/2)
+        face_centery, face_centerx = image(y+h//2, x+w//2)
         not_moved = True
 
         if face_centerx < (width/2-100):
@@ -248,10 +247,9 @@ class SearchForFace:
         :return:
         """
         width, height = image.shape[:2]
-        center_screen_area = image[height / 2 - 100:height / 2 + 100, width / 2 - 100:width / 2 + 100]
         x, y, w, h = face
         roi_face = image[y:y + h, x:x + w]
-        face_centery, face_centerx = image(y + h / 2, x + w / 2)
+        face_centery, face_centerx = image(y + h // 2, x + w // 2)
 
         if face_centery < (height / 2 - 100):
             self.move_head(False, 200)
