@@ -65,14 +65,14 @@ class SearchForFace:
         :return:
         """
         if turn:
-            self.headTurn += value
+            self.headTurn = value
             if self.headTurn > 7900:
                 self.headTurn = 7900
             elif self.headTurn < 1510:
                 self.headTurn = 1510
             self.tango.setTarget(self.HEADTURN, self.headTurn)
         else:
-            self.headTilt += value
+            self.headTilt = value
             if self.headTilt > 7900:
                 self.headTilt = 7900
             elif self.headTilt < 1510:
