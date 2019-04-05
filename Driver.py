@@ -63,10 +63,10 @@ def move_head(turn, value):
 
 def search_for_face(image, face):
     w, h = image.shape[:2]
-    tango.setTarget(HEADTILT, 3000)
+    #tango.setTarget(HEADTILT, 3000)
     for y in range(1510, 7900):
         move_head(False, y)
-        tango.setTarget(HEADTURN, 7900)
+        tango.setTarget(HEADTURN, 1510)
         time.sleep(1)
         for x in range(1510, 7900):
             move_head(True, x)
