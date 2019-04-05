@@ -70,11 +70,11 @@ def search_for_face(image, face):
         time.sleep(1)
         for x in range(1510, 7900):
             move_head(True, x)
-            if face is not None:
-                pass
+            #if face is not None:
+         #       pass
             time.sleep(.5)
-        if face is not None:
-            pass
+        #if face is not None:
+          #  pass
 
 
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
