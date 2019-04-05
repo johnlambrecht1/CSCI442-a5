@@ -14,7 +14,7 @@ face_search = SearchForFace(client)
 distance_tolerance = 0.1  # don't move to the face if within this distance of 1 unit
 
 # global variables
-no_face_search_restart_interval = 0  # min time interval required to restart face search
+no_face_search_restart_interval = 20  # min time interval required to restart face search
 last_face_time = -no_face_search_restart_interval  # last time a face was seen
 
 
