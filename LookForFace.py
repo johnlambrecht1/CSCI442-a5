@@ -50,7 +50,7 @@ class SearchForFace:
 
         self.zero_motors()
 
-    def move_head(self, turn, value):
+    def move_head_immediate(self, turn, value):
         """
         Move head to position
         :param turn: True if turning head, false if tilting
@@ -66,6 +66,22 @@ class SearchForFace:
             self.tango.setTarget(self.HEADTURN, self.headTurn)
         else:
             self.headTilt = value
+            if self.headTilt > 7900:
+                self.headTilt = 7900
+            elif self.headTilt < 1510:
+                self.headTilt = 1510
+            self.tango.setTarget(self.HEADTILT, self.headTilt)
+
+    def move_head(self, turn, value):
+        if turn:
+            self.headTurn += value
+            if self.headTurn > 7900:
+                self.headTurn = 7900
+            elif self.headTurn < 1510:
+                self.headTurn = 1510
+            self.tango.setTarget(self.HEADTURN, self.headTurn)
+        else:
+            self.headTilt += value
             if self.headTilt > 7900:
                 self.headTilt = 7900
             elif self.headTilt < 1510:
@@ -132,8 +148,8 @@ class SearchForFace:
         """
 
         # move to next scanning position
-        self.move_head(True, self.scan[x])
-        self.move_head(False, self.scan[y])
+        self.move_head_immediate(True, self.scan[x])
+        self.move_head_immediate(False, self.scan[y])
 
         # check for a face
         face = self.get_face(image)
