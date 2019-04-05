@@ -76,8 +76,9 @@ def running_loop():
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
         image = frame.array
         rawCapture.truncate(0)
-        
+
         if search_state:
+            print("searching state")
             # search for a face, once found go on to rotate state unless still in tracking state
             face_found, face = searching(image)
             if face_found:
@@ -85,18 +86,21 @@ def running_loop():
                 rotate_state = not tracking_state
 
         elif rotate_state:
+            print("rotating state")
             face_found = rotate_to_face(face, image)
             rotate_state = False
             if not face_found:
                 search_state = True
 
         elif moving_state:
+            print("moveing state")
             face_found = move_to_face(face)
             moving_state = False
             if not face_found:
                 search_state = True
 
         elif tracking_state:
+            print("tracking state")
             # only exit tracking state to do some searching then go right back to tracking
             face_found = tracking_face(face, image)
             timeout = time.process_time() - last_face_time < no_face_search_restart_interval
