@@ -56,8 +56,7 @@ def rotate_to_face(face, image):
     rotating to center on face state
     :return: False if face is lost
     """
-    face_search.center_on_face(face, image)
-    return False
+    return face_search.center_on_face(face, image)
 
 
 def running_loop():

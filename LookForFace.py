@@ -13,7 +13,7 @@ class SearchForFace:
         self.MOTORS=1
         self.face_cascade = cv.CascadeClassifier("haarcascade_frontalface_default.xml")
 
-        # allow the camera to warmup
+        # allow the camera to warm up
         time.sleep(0.1)
 
         # use the given Tango Phone client
