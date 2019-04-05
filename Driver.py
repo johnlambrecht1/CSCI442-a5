@@ -112,7 +112,7 @@ def running_loop(image, rawCapture):
 
 camera = PiCamera()  # why doesn't it like this line?
 
-w, h = 320, 240
+w, h = 640, 480
 camera.resolution = (w,h)
 camera.framerate=32
 rawCapture = PiRGBArray(camera, size=camera.resolution)
