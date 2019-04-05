@@ -4,6 +4,7 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 import numpy as np
 import time
+import cv2 as cv
 
 IP = '10.200.22.237'
 PORT = 5010
@@ -76,7 +77,7 @@ def running_loop():
         rawCapture.truncate(0)
         # TODO remove sleep
         time.sleep(0.1)
-
+        cv.imshow(image)
         if search_state:
             print("searching state")
             # search for a face, once found go on to rotate state unless still in tracking state
