@@ -121,4 +121,4 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     image = frame.array
     print("test1")
     #running_loop(image, rawCapture)
-    cv.imshow(image)
+    cv.imshow(image, "image")
