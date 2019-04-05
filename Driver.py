@@ -10,7 +10,7 @@ IP = '10.200.2.215'
 PORT = 5010
 # set up client and face searching
 client = ClientSocket(IP, PORT)
-face_search = SearchForFace(client)
+#face_search = SearchForFace(client)
 distance_tolerance = 0.1  # don't move to the face if within this distance of 1 unit
 
 # global variables
