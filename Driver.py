@@ -26,7 +26,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     face = face_cascade.detectMultiScale(image, 1.8, 5)
 
     for (x,y,w,h) in face:
-        cv.rectangle(image, (y,x), (y+h, x+w), (0,0,255), 3)
+        cv.rectangle(image, (x,y), (x+w, y+h), (0,0,255), 3)
 
     cv.imshow("image", image)
     key = cv.waitKey(1) & 0xFF
