@@ -29,6 +29,7 @@ class SearchForFace:
 
         # stop scanning for a face after this timeout
         self.give_up_search_time = 120  # give up after 2 min
+        self.start_time = -1
 
         # vars for fitting face size to linear function
         self.reference_face_size_at_5 = None  # reference size at 5 unit distance
@@ -43,6 +44,8 @@ class SearchForFace:
         for x in range(1800, 6001, 200):
             self.scan.append(x)
         self.scan = np.array(self.scan)
+        self.scan_index = 0
+        self.scan_size = len(self.scan)
 
         # motor control variables
         self.tango = maestro.Controller()
@@ -51,6 +54,8 @@ class SearchForFace:
         self.headTilt = 6000
         self.motors = 6000
         self.turn = 6000
+
+        self.zero_motors()
 
     def move_head(self, turn, value):
         """
@@ -108,30 +113,39 @@ class SearchForFace:
             self.motors=1510
         self.tango.setTarget(self.MOTORS, self.motors)
 
-    def search_for_face(self, image):
+    def search_for_face_manager(self, image):
+        """
+        manages search_for_face, can be called repeatedly and will emulate a 2d for loop on self.scan
+        :param image:
+        :return:
+        """
+        if self.scan_index == 0:
+            self.start_time = time.process_time()
+        # scan for face while not expired
+        if time.process_time() - self.start_time < self.give_up_search_time:
+            # convert a single index (scan_index) of max length scan_size^2
+            # to the equivalent of a 2d for loop on self.scan
+            face = self.__search_for_face(image, self.scan_index // self.scan_size, self.scan_index % self.scan_size)
+            self.scan_index += 1
+            # wrap on scan_index^2
+            self.scan_index %= np.power(self.scan_index, 2)
+            return face
+        return None
+
+    def __search_for_face(self, image, x, y):
         """
         search for a face, if face is found, return success, otherwise loop
         :return: the face found which is its (x, y, w, h) or None
         """
-        #if time.process_time() - self.last_face_time < self.no_face_search_restart_interval:
-            # don't do search again
-        #    return None
 
-        start_time = time.process_time()
-        # scan for face while not expired
-        while time.process_time() - start_time < self.give_up_search_time:
-            for y in self.scan:
-                for x in self.scan:
-                    # move to next scanning position
-                    self.move_head(True, x)
-                    self.move_head(False, y)
+        # move to next scanning position
+        self.move_head(True, x)
+        self.move_head(False, y)
 
-                    # check for a face
-                    face = self.get_face(image)
-                    if face is not None:
-                        return face
-        # time expired, face not found
-        return None
+        # check for a face
+        face = self.get_face(image)
+        if face is not None:
+            return face
 
     def get_face(self, image):
         """
@@ -154,18 +168,17 @@ class SearchForFace:
             # no face found
             return None
 
-    def face_found(self, face):
+    def face_found(self):
         """
         do face found actions
         - don't do if the face is lost for less then 15 sec
         - say “hello human”
         :param face: the face that was found
-        :return: distance to the face
+        :return: None
         """
         for words in ["hello human", "How are you"]:
             time.sleep(1)
             self.client.sendData(words)
-        return self.get_face_distance(face)
 
     def get_face_distance(self, face):
         """
@@ -188,7 +201,6 @@ class SearchForFace:
         # get distance units, 1 is where we want to be
         dis = (w - b)/m
         return dis
-
 
 
     def center_on_face(self, face):
@@ -220,7 +232,6 @@ class SearchForFace:
                 self.turn_bot(300)
                 time.sleep(1.5)
                 self.turn_bot(-300)
-        pass
 
     def move_forward_or_back(self, face):
         """
@@ -238,7 +249,6 @@ class SearchForFace:
                 self.move_bot(-300)
         self.motors = 6000
         self.tango.setTarget(self.MOTORS, self.motors)
-        pass
 
     def track_face(self, face):
         """
@@ -260,6 +270,3 @@ class SearchForFace:
             self.move_head(True, 150)
         while face_centerx > (width / 2 + 100):
             self.move_head(True, 150)
-
-
-        pass
