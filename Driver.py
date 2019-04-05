@@ -5,10 +5,10 @@ from picamera import PiCamera
 import numpy as np
 import time
 
-IP = '10.200.56.146'
+IP = '10.200.22.237'
 PORT = 5010
 # set up client and face searching
-client = ClientSocket(IP, PORT)
+client = None##ClientSocket(IP, PORT)
 face_search = SearchForFace(client)
 distance_tolerance = 0.1  # don't move to the face if within this distance of 1 unit
 
@@ -38,7 +38,7 @@ def searching(image):
         # face found
         last_face_time = time.process_time()
         # say "hello human"
-        face_search.face_found()
+        # TODO face_search.face_found()
         return True, face
     else:
         print("No face found before timeout")

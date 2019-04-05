@@ -263,10 +263,10 @@ class SearchForFace:
             roi_face = self.image[y:y + h, x:x + w]
             face_centery, face_centerx = self.image(y + h / 2, x + w / 2)
         while face_centery < (height / 2 - 100):
-            self.move_head(False, 150)
+            self.move_head(False, 200)
         while face_centery > (height / 2 + 100):
-            self.move_head(False, 150)
+            self.move_head(False, 200)
         while face_centerx < (width / 2 - 100):
-            self.move_head(True, 150)
+            self.move_head(True, 200)
         while face_centerx > (width / 2 + 100):
-            self.move_head(True, 150)
+            self.move_head(True, 200)
