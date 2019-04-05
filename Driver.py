@@ -4,8 +4,9 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 import numpy as np
 import time
+import cv2 as cv
 
-IP = '10.200.56.146'
+IP = '10.200.2.215'
 PORT = 5010
 # set up client and face searching
 client = ClientSocket(IP, PORT)
@@ -119,4 +120,5 @@ print("test2")
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
     image = frame.array
     print("test1")
-    running_loop(image, rawCapture)
+    #running_loop(image, rawCapture)
+    cv.imshow(image)
